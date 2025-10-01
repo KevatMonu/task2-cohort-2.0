@@ -10,7 +10,7 @@
     <a href="index.html" class="back-btn">← Back</a>
     
     <div class="box">
-        <video id="bgVideo" autoplay loop muted >
+        <video id="bgVideo" autoplay loop muted playsinline>
             <source src="./zoro.mp4" type="video/mp4">
             Your browser does not support the video tag.
         </video>
@@ -21,23 +21,37 @@
         </div>
     </div>
 
-    <audio id="bgMusic" autoplay>
-        <source src="../task2/zoro-onigiri.mp3" type="audio/mpeg">
-        <source src="../task2/zoro-onigiri.mp3" type="audio/ogg">
-        Your browser does not support the audio element.
-    </audio>
+   <audio id="bgMusic" preload="auto">
+    <source src="zoro-onigiri.mp3" type="audio/mpeg">
+    Your browser does not support the audio element.
+</audio>
 
-    <script>
-        
-        window.addEventListener('load', () => {
-            const music = document.getElementById('bgMusic');
-            music.play().catch(e => {
-                
-                document.addEventListener('click', () => {
-                    music.play();
-                }, { once: true });
+  <script>
+    const music = document.getElementById('bgMusic');
+    const video = document.getElementById('bgVideo');
+    
+    let audioStarted = false;
+    
+    const playAudio = () => {
+        if (!audioStarted) {
+            music.volume = 1.0;
+            music.play().then(() => {
+                console.log('Audio playing successfully!');
+                audioStarted = true;
+            }).catch(e => {
+                console.log('Audio play failed:', e);
             });
-        });
-    </script>
+        }
+    };
+    
+    window.addEventListener('load', () => {
+        video.play().catch(e => console.log('Video blocked'));
+        playAudio();
+    });
+    
+    document.addEventListener('click', playAudio);
+    document.addEventListener('touchstart', playAudio);
+    document.addEventListener('keydown', playAudio);
+</script>
 </body>
 </html>
